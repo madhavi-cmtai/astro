@@ -1,0 +1,11 @@
+// corsConfig.ts
+
+export const corsConfig = [
+    {
+        origin: ["http://localhost:3000"],
+        method: ["GET", "POST", "PUT", "DELETE"],
+        maxAgeSeconds: 3600,
+        responseHeader: ["Content-Type", "Authorization"],
+    },
+];
+  
