@@ -84,7 +84,7 @@ const ProductsPage = () => {
     <div className="min-h-screen bg-white" style={{ fontFamily: 'var(--font-main)' }}>
       {/* Hero Section */}
       <div className="relative min-h-[340px] md:min-h-[420px] flex flex-col items-center justify-center text-white text-center overflow-hidden mb-12">
-        <div className="absolute inset-0 bg-[url('/images/blog7.webp')] bg-cover bg-center bg-no-repeat" />
+        <div className="absolute inset-0 bg-[url('/images/product-banner.jpg')] bg-cover bg-center bg-no-repeat" />
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg tracking-tight leading-tight">
