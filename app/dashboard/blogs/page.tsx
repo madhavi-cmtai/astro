@@ -9,8 +9,7 @@ import { toast } from "sonner";
 import { useSelector, useDispatch } from "react-redux";
 import { selectBlogs, selectError, selectLoading, updateBlog, deleteBlog as deleteBlogAction, addBlog, Blog, fetchBlogs } from "@/lib/redux/features/blogSlice";
 import { AppDispatch } from "@/lib/redux/store";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "@/lib/firebaseConfig";
+
 
 export default function BlogsPage() {
     const dispatch = useDispatch<AppDispatch>();
@@ -33,15 +32,18 @@ export default function BlogsPage() {
         dispatch(fetchBlogs());
     }, [dispatch]);
 
-    const filteredBlogs = useMemo(
-        () =>
-            (Array.isArray(blogs) ? blogs : []).filter(
-                (p) =>
-                    p.title.toLowerCase().includes(search.toLowerCase()) ||
-                    p.summary.toLowerCase().includes(search.toLowerCase())
-            ),
-        [blogs, search]
-    );
+    const filteredBlogs = useMemo(() => {
+        return (Array.isArray(blogs) ? blogs : []).filter((p) => {
+            const title = Array.isArray(p.title) ? p.title[0] : p.title;
+            const summary = Array.isArray(p.summary) ? p.summary[0] : p.summary;
+
+            return (
+                title?.toLowerCase().includes(search.toLowerCase()) ||
+                summary?.toLowerCase().includes(search.toLowerCase())
+            );
+        });
+    }, [blogs, search]);
+    
 
     const openAddModal = () => {
         setEditBlog(null);
@@ -87,42 +89,42 @@ export default function BlogsPage() {
         setIsEditing(true);
 
         try {
-            let imageToUse = imagePreview || form.image || "";
-
-            if (imageFile) {
-                const fileRef = ref(storage, `blogs/${imageFile.name}_${Date.now()}`);
-                const snapshot = await uploadBytes(fileRef, imageFile);
-                imageToUse = await getDownloadURL(snapshot.ref);
-            }
-
-            const blogData: Blog = {
-                title: form.title,
-                summary: form.summary,
-                image: imageToUse,
-                createdOn: new Date().toISOString(),
-                updatedOn: new Date().toISOString(),
-            };
-
-            if (editBlog) {
-                dispatch(updateBlog(blogData, editBlog.id || ""));
-                dispatch(fetchBlogs());
+            if (editBlog && editBlog.id) {
+                // === UPDATE EXISTING BLOG ===
+                await dispatch(updateBlog({
+                    id: editBlog.id,
+                    title: form.title,
+                    summary: form.summary,
+                    image: editBlog.image, // Optional: you can skip this if backend regenerates URL
+                    file: imageFile || undefined,
+                }, editBlog.id));
                 toast.success("Blog updated!");
             } else {
-                dispatch(addBlog(blogData));
-                dispatch(fetchBlogs());
+                // === ADD NEW BLOG ===
+                const formData = new FormData();
+                formData.append("title", form.title);
+                formData.append("summary", form.summary);
+                if (imageFile) {
+                    formData.append("image", imageFile);
+                }
+
+                await dispatch(addBlog(formData));
                 toast.success("Blog added!");
             }
 
             setModalOpen(false);
-            setIsEditing(false);
-            setImageFile(null);
-            setImagePreview(null);
+            dispatch(fetchBlogs()); // Refresh blogs
         } catch (error) {
             console.error("Error submitting blog:", error);
             toast.error("Failed to save blog.");
+        } finally {
             setIsEditing(false);
+            setImageFile(null);
+            setImagePreview(null);
         }
     };
+      
+    
 
     return (
         <div className="mx-auto p-0 flex flex-col gap-8">

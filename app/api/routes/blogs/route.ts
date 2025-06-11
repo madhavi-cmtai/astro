@@ -1,19 +1,23 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import BlogService from "../../services/blogServices";
 import { UploadImage } from "../../controller/imageController";
 import consoleManager from "../../utils/consoleManager";
-import formidable from "formidable";
+import formidable, { IncomingForm } from "formidable";
+import { Readable } from "stream";
+import fs from "fs";
+
 
 
 export const config = {
     api: {
-        bodyParser: false, // Disable Next.js's default body parser for formidable
+        bodyParser: false, // Disable Next.js body parser to use formidable
     },
 };
 
-export async function GET(req: Request) {
+export async function GET() {
     try {
         const blogs = await BlogService.getAllBlogs();
+
         return NextResponse.json(
             {
                 statusCode: 200,
@@ -26,8 +30,6 @@ export async function GET(req: Request) {
         );
     } catch (error: any) {
         consoleManager.error("Error in GET /api/blogs:", error);
-        // It's generally good practice to log error details for debugging
-        // but avoid exposing too much detail in the client response.
         return NextResponse.json(
             {
                 statusCode: 500,
@@ -39,107 +41,81 @@ export async function GET(req: Request) {
     }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     try {
-        const contentType = req.headers.get("content-type") || "";
+        console.log("Received POST request");
 
-        // Ensure the content-type is multipart/form-data
-        if (!contentType.includes("multipart/form-data")) {
-            return NextResponse.json(
-                {
-                    statusCode: 400,
-                    errorCode: "BAD_REQUEST",
-                    errorMessage: "Content-Type must be multipart/form-data",
-                },
-                { status: 400 }
-            );
-        }
+        const form = new IncomingForm({ keepExtensions: true, multiples: false });
 
-        // Dynamically import formidable to parse multipart form-data
-        // 'import().default' is used because formidable is a default export
-        const formidable = (await import("formidable")).default;
-        const form = new formidable.IncomingForm();
+        const nodeReq = Readable.fromWeb(req.body as any) as any;
+        nodeReq.headers = Object.fromEntries(req.headers.entries());
+        nodeReq.method = req.method;
 
-       
-        const { fields, files } = await new Promise<{ fields: formidable.Fields; files: formidable.Files }>(
-            (resolve, reject) => {
-               
-                form.parse(req as any, (err, fields, files) => {
-                    if (err) {
-                        consoleManager.error("Formidable parse error:", err);
-                        return reject(err);
-                    }
+        console.log("Parsing form data...");
+        const data = await new Promise<{ fields: any; files: any }>((resolve, reject) => {
+            form.parse(nodeReq, (err, fields, files) => {
+                if (err) {
+                    console.log("Error parsing form:", err);
+                    reject(err);
+                } else {
+                    console.log("Parsed form data:", fields, files);
                     resolve({ fields, files });
-                });
-            }
-        );
-
-       
-        const title = Array.isArray(fields.title) ? fields.title[0] : fields.title;
-        const summary = Array.isArray(fields.summary) ? fields.summary[0] : fields.summary;
-
-       
-        const imageFile = Array.isArray(files.image) ? files.image[0] : files.image;
-
-      
-        if (!title || !summary) {
-            return NextResponse.json(
-                {
-                    statusCode: 400,
-                    errorCode: "BAD_REQUEST",
-                    errorMessage: "Title and summary are required",
-                },
-                { status: 400 }
-            );
-        }
-
-        if (!imageFile) {
-            return NextResponse.json(
-                {
-                    statusCode: 400,
-                    errorCode: "BAD_REQUEST",
-                    errorMessage: "Image file is required",
-                },
-                { status: 400 }
-            );
-        }
-
-     
-        const width = 1200; 
-        const height = 800; 
-
-        const uploadedImageUrl = await UploadImage(imageFile.filepath, width, height);
-
-       
-        // Save new blog with uploaded image URL
-        const newBlog = await BlogService.addBlog({
-            title: String(title),
-            summary: String(summary),
-            image: uploadedImageUrl,
-            createdAt: new Date().toISOString(), 
+                }
+            });
         });
 
-        consoleManager.log("Blog added successfully:", newBlog.id);
+        const { title, summary } = data.fields;
+        const image = Array.isArray(data.files.image) ? data.files.image[0] : data.files.image;
+
+        if (!title || !summary || !image) {
+            console.log("Validation failed:", { title, summary, image });
+            return NextResponse.json(
+                { statusCode: 400, errorMessage: "Title, summary, and image are required" },
+                { status: 400 }
+            );
+        }
+
+        console.log("Uploading image...");
+        const imageStream = fs.createReadStream(image.filepath);
+        const imageUrl = await UploadImage(imageStream, 800, 600);
+
+        if (!imageUrl) {
+            console.log("Image upload failed");
+            throw new Error("Image upload returned no URL");
+        }
+
+        console.log("Image uploaded:", imageUrl);
+
+        const newBlog = {
+            title,
+            summary,
+            image: imageUrl,
+        };
+
+        console.log("Saving to Firestore:", newBlog);
+        const created = await BlogService.addBlog(newBlog);
+        console.log("Blog saved:", created);
 
         return NextResponse.json(
             {
                 statusCode: 201,
-                message: "Blog added successfully",
-                data: newBlog,
+                message: "Blog created successfully",
+                data: created,
                 errorCode: "NO",
                 errorMessage: "",
             },
             { status: 201 }
         );
-    } catch (error: any) {
-        consoleManager.error("Error in POST /api/blogs:", error);
+    } catch (error) {
+        console.error("Error in POST /api/routes/blogs:", error);
         return NextResponse.json(
             {
                 statusCode: 500,
                 errorCode: "INTERNAL_ERROR",
-                errorMessage: error.message || "Internal Server Error",
+                errorMessage: "Something went wrong",
             },
             { status: 500 }
         );
     }
 }
+  
