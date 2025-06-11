@@ -81,32 +81,89 @@ const About = () => {
             />
           </motion.div>
 
+          
+
           {/* 🧘 Content */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="w-full md:w-1/2 -ml-20"
+            className="w-full md:w-1/2 -ml-20 space-y-6"
           >
-            <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-red)] to-[var(--primary-gold)] mb-4 -mt-5">
+            <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-red)] to-[var(--primary-gold)] -mt-2 ">
               Your Journey to Clarity Starts Here
             </h2>
-            <p className="text-lg text-gray-800 mb-4">I’m
-              <span className="text-[var(--primary-red)] font-bold"> Acharya Shilpa Sethi, </span>
-              a devoted spiritual guide and healer, offering transformative experiences through the sacred sciences of Tarot, Reiki, and Numerology.
-              Since 2008, I’ve walked the path of spiritual service — blending ancient metaphysical wisdom with divine intuition to help others align with their true essence.
-            </p>
-            <p className="text-lg text-gray-800 mb-4">
-              My work is more than just readings — it’s a soulful journey that helps you release energetic blocks, connect to your higher self, and realign with the universe’s natural flow.
-            </p>
-            <p className="text-lg text-gray-800 mb-4">
-              Over the years, I’ve had the honor of guiding thousands through life’s transitions — whether you're seeking answers, healing, or inner awakening, my mission is to hold space for your transformation and empower you with insight, energy, and confidence.
+
+            <p className="text-lg text-gray-800 leading-relaxed mt-10 text-xl">
+              I’m <span className="text-[var(--primary-red)] font-bold">Acharya Shilpa Sethi</span> — a devoted spiritual guide and healer. I offer transformative experiences through the sacred sciences of Tarot, Reiki, and Numerology.
+              Over the years, I’ve had the honor of guiding thousands through life’s transitions.
             </p>
 
+            <div className="border-l-4 border-[var(--primary-gold)] pl-4 italic text-[var(--primary-red)] font-medium bg-[var(--primary-gold)]/10 rounded-md mt-10 leading-relaxed text-xl">
+              “Since 2008, I’ve walked the path of spiritual service — blending ancient metaphysical wisdom with divine intuition to help others align with their true essence.”
+            </div>
+
+          </motion.div>
+
+        </div>
+      </section>
+
+      {/* 🌌 Soulful Journey Section */}
+      <section className="w-full max-w-7xl mx-auto my-20 px-6">
+        <div className="bg-gradient-to-r from-[var(--primary-gold)] via-white to-[var(--primary-red)] rounded-3xl shadow-xl p-10 flex flex-col md:flex-row items-center gap-10 relative overflow-hidden">
+
+          {/* Glow Background Effects */}
+          <motion.div
+            className="absolute w-24 h-24 bg-[var(--primary-red)] rounded-full blur-2xl opacity-20 top-6 left-6 z-0"
+            animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.3, 0.2] }}
+            transition={{ duration: 6, repeat: Infinity }}
+          />
+          <motion.div
+            className="absolute w-32 h-32 bg-[var(--primary-gold)] rounded-full blur-2xl opacity-20 bottom-6 right-8 z-0"
+            animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
+            transition={{ duration: 7, repeat: Infinity }}
+          />
+
+          {/* ✨ Content first, then image */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="w-full md:w-1/2 space-y-5 relative z-10"
+          >
+            <h2 className="text-4xl font-extrabold bg-gradient-to-r from-[var(--primary-red)] to-[var(--primary-gold)] bg-clip-text text-transparent -mt-40">
+              A Soulful Journey of Awakening
+            </h2>
+            <p className="text-lg text-gray-800 leading-relaxed">
+              My work is more than just readings — it’s a soulful journey. Together, we’ll release energetic blocks, connect to your higher self, and restore your spiritual balance.
+            </p>
+            <p className="border-l-4 border-[var(--primary-gold)] pl-4 italic text-[var(--primary-red)] font-medium bg-[var(--primary-gold)]/10 rounded-md mt-10 leading-relaxed text-xl">
+              Over the years, I’ve had the honor of guiding thousands through life’s transitions. Whether you seek clarity, healing, or awakening, my mission is to empower your path with insight, energy, and confidence.
+            </p>
+          </motion.div>
+
+          {/* 🎴 Image on the right, reduced height */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="w-full md:w-1/2 relative z-10"
+          >
+            <Image
+              src="/images/soulful-journey.jpg"
+              alt="Soulful Journey"
+              width={400}
+              height={300}
+              className="rounded-2xl shadow-lg border-4 border-[var(--primary-gold)] object-cover w-[900px] h-[580px]"
+            />
           </motion.div>
         </div>
       </section>
+
+
 
       {/* 💫 Services */}
       <section className="w-full max-w-7xl mx-auto px-4 py-20">

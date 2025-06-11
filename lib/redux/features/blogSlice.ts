@@ -2,6 +2,7 @@ import { createSlice, Dispatch } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../store";
 
+
 export interface Blog {
   id?: string;
   title: string;
@@ -97,11 +98,17 @@ export const fetchBlogById = (id: string) => async (dispatch: Dispatch) => {
 };
 
 // Add blog
-export const addBlog = (blog: Blog) => async (dispatch: Dispatch) => {
+export const addBlog = (formData: FormData) => async (dispatch: Dispatch) => {
   dispatch(setLoading(true));
   try {
-    const response = await axios.post("/api/routes/blogs", blog);
-    if (response.status === 200) {
+    const response = await axios.post("/api/routes/blogs", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.status === 200 || response.status === 201) {
+      await dispatch<any>(fetchBlogs()); // Refresh list if needed
       return response.data;
     } else {
       dispatch(setError(response.data.message));
@@ -115,12 +122,27 @@ export const addBlog = (blog: Blog) => async (dispatch: Dispatch) => {
   }
 };
 
+
 // Update blog
-export const updateBlog = (blog: Blog, id: string) => async (dispatch: Dispatch) => {
+export const updateBlog = (
+  blog: Blog & { file?: File }, // accepts optional new image
+  id: string
+) => async (dispatch: Dispatch) => {
   dispatch(setLoading(true));
   try {
-    const response = await axios.put(`/api/routes/blogs/${id}`, blog);
+    const formData = new FormData();
+    formData.append("title", blog.title);
+    formData.append("summary", blog.summary);
+    if (blog.file) {
+      formData.append("image", blog.file);
+    }
+
+    const response = await axios.put(`/api/routes/blogs/${id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
     if (response.status === 200) {
+      await dispatch<any>(fetchBlogs()); // Refresh blog list after update
       return response.data;
     } else {
       dispatch(setError(response.data.message));
@@ -131,8 +153,11 @@ export const updateBlog = (blog: Blog, id: string) => async (dispatch: Dispatch)
         ? (error as { message?: string }).message
         : String(error);
     dispatch(setError(message || "Unknown error"));
+  } finally {
+    dispatch(setLoading(false));
   }
 };
+
 
 // Delete blog
 export const deleteBlog = (id: string) => async (dispatch: Dispatch) => {

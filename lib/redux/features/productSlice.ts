@@ -8,14 +8,14 @@ export interface Product {
   name: string;
   image: string;
   description: string;
-  category: string;
+  price: string;
   createdOn: string;
   updatedOn: string;
 }
 
 // Slice state
 export interface ProductState {
-  data: Product[];
+  products: Product[];
   loading: boolean;
   error: string | null;
   selectedProduct: Product | null;
@@ -23,7 +23,7 @@ export interface ProductState {
 
 // Initial state
 const initialState: ProductState = {
-  data: [],
+  products: [],
   loading: false,
   error: null,
   selectedProduct: null,
@@ -35,7 +35,7 @@ const productSlice = createSlice({
   initialState,
   reducers: {
     setProducts: (state, action) => {
-      state.data = action.payload;
+      state.products = action.payload;
       state.loading = false;
       state.error = null;
     },
@@ -122,7 +122,7 @@ export const addProduct = (product: FormData) => async (dispatch: Dispatch) => {
   }
 };
 
-export const updateProduct = (product: FormData, id: string) => async (dispatch: Dispatch) => {
+export const updateProduct = ({ id, product }: { id: string; product: FormData }) => async (dispatch: Dispatch) => {
   dispatch(setLoading(true));
   try {
     const response = await axios.put(`/api/routes/products/${id}`, product, {
@@ -144,7 +144,8 @@ export const updateProduct = (product: FormData, id: string) => async (dispatch:
   }
 };
 
-export const deleteProduct = (id: string) => async (dispatch: Dispatch) => {
+
+export const deleteProduct = ({ id }: { id: string }) => async (dispatch: Dispatch) => {
   dispatch(setLoading(true));
   try {
     const response = await axios.delete(`/api/routes/products/${id}`);
@@ -162,10 +163,11 @@ export const deleteProduct = (id: string) => async (dispatch: Dispatch) => {
   }
 };
 
+
 // Selectors
-export const selectProducts = (state: RootState) => state.product.data;
+export const selectProducts = (state: RootState) => state.product.products;
 export const selectProductById = (state: RootState, id: string) =>
-  state.product.data.find((product: Product) => product.id === id);
+  state.product.products.find((product: Product) => product.id === id);
 export const selectLoading = (state: RootState) => state.product.loading;
 export const selectError = (state: RootState) => state.product.error;
 

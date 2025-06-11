@@ -10,9 +10,10 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Travelink County | Let's Travel Together",
-  description: "Travelink County is a travel agency that helps you find the best travel deals and destinations.",
+  title: "Cosmic Seer | Tarot, Reiki & Numerology",
+  description: "Experience divine guidance and soulful transformation with Acharya Shilpa Sethi.",
 };
+
 
 export default function RootLayout({
   children,
