@@ -33,13 +33,13 @@ const transformationStories = [
 // Helper to render star icons
 const renderStars = (count: number) => {
   return Array.from({ length: count }).map((_, i) => (
-    <Star key={i} className="w-5 h-5 text-[var(--primary-gold)] fill-[var(--primary-gold)]" />
+    <Star key={i} className="w-5 h-5 text-[var(--primary-gold)] fill-[#FEDC01]" />
   ));
 };
 
 const TestimonialSection = () => {
   return (
-    <section className="mt-15 bg-gradient-to-b from-[var(--primary-gold)] via-white to-[var(--primary-red)] py-16 px-4 md:px-10 rounded-xl shadow-md max-w-7xl mx-auto overflow-hidden">
+    <section className="mt-15 bg-gradient-to-b from-white via-white to-[var(--primary-green)] py-16 px-4 md:px-10 rounded-xl shadow-md max-w-7xl mx-auto overflow-hidden">
       <h2 className="text-3xl md:text-4xl font-extrabold text-center text-[var(--primary-red)] mb-12">
         🌟 How Tarot Changed Their Path
       </h2>
@@ -53,11 +53,11 @@ const TestimonialSection = () => {
             {/* Top Section */}
             <div className="flex items-center gap-7 mb-10">
               <div>
-                <h3 className="font-semibold text-2xl text-[var(--primary-green)] mb-1">
+                <h3 className="font-semibold text-2xl text-[#73CDA7] mb-1">
                   {story.name}
                 </h3>
                 <p className="text-xs text-black font-bold mb-1">Tarot Spread: {story.spread}</p>
-                <div className="flex items-center gap-1">{renderStars(story.rating)}</div>
+                <div className="flex items-center gap-1 ">{renderStars(story.rating)}</div>
               </div>
             </div>
 

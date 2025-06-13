@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const AboutSection = () => {
   return (
-    <section className="relative py-20 px-6 bg-gradient-to-br from-[var(--primary-gold)] via-white to-[var(--primary-red)] rounded-xl shadow-md mx-auto w-full max-w-7xl overflow-hidden">
+    <section className="relative py-20 px-6 bg-gradient-to-br from-white via-white to-[var(--primary-green)] rounded-xl shadow-md mx-auto w-full max-w-7xl overflow-hidden">
       {/* Optional Glow Orbs for Mystic Effect */}
       <motion.div
         className="absolute w-32 h-32 bg-[var(--primary-red)] rounded-full blur-2xl opacity-20 top-2 left-4 z-0"
@@ -44,7 +44,7 @@ const AboutSection = () => {
           viewport={{ once: true }}
           className="w-full md:w-1/2 flex flex-col"
         >
-          <h2 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-red)] to-[var(--primary-gold)] mb-4">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-red)] to-[var(--primary-gold)] -mt-3 mb-4">
             Unlock the Mysteries of Your Destiny
           </h2>
           <p className="text-base md:text-lg text-gray-700 mb-5">

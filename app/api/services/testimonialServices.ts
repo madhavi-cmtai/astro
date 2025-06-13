@@ -68,7 +68,7 @@ class TestimonialService {
     }
 
     // Get testimonial by ID (fetches from cache first)
-    static async getTestimonialById(testimonialId: string) {
+    static async getTestimonialById(testimonialId: string, forceFirestore: boolean = false) {
         try {
             // Check if testimonial exists in cache
             const cachedTestimonial = this.testimonials.find((t: any) => t.id === testimonialId);

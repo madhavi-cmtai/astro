@@ -39,7 +39,7 @@ const Header = () => {
                   `px-2 py-1 rounded-md transition-colors ` +
                   (isActive
                     ? "font-bold text-[var(--primary-red)]"
-                    : "text-[var(--primary-gold)] hover:text-[var(--primary-gold)] hover:bg-[#fff1e6]")
+                    : "text-[var(--primary-green)] hover:text-[var(--primary-gold)] hover:bg-[#fff1e6]")
                 }
               >
                 {link.name}
@@ -68,7 +68,7 @@ const Header = () => {
                   `block py-2 text-base font-semibold ` +
                   (isActive
                     ? "text-[var(--primary-red)]"
-                    : "text-[var(--primary-gold)] hover:text-[var(--primary-gold)]")
+                    : "text-[var(--primary-green)] hover:text-[var(--primary-gold)]")
                 }
               >
                 {link.name}

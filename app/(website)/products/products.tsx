@@ -88,7 +88,7 @@ const ProductsPage = () => {
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg tracking-tight leading-tight">
-            Our <span className="text-[#ffc72c]">Products</span>
+            Our <span className="text-[var(--primary-gold)]">Products</span>
           </h1>
           <p className="text-lg md:text-xl max-w-3xl mx-auto font-semibold drop-shadow-lg mt-2">
             Explore our most-loved tarot readings. Handpicked spreads, powerful insights, and guidance you'll never forget!
@@ -118,7 +118,7 @@ const ProductsPage = () => {
                   )}" tarot reading.`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block text-center bg-[var(--primary-red)] hover:bg-red-500 text-black font-bold py-2 px-4 rounded-xl transition"
+                  className="inline-block text-center bg-[var(--primary-red)] hover:bg-[var(--primary-green)] text-black font-bold py-2 px-4 rounded-xl transition"
                 >
                   Buy Now
                 </a>
@@ -163,7 +163,7 @@ const ProductsPage = () => {
                   )}" tarot reading.`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block text-center bg-[var(--primary-red)] hover:bg-red-500 text-black font-bold py-2 px-4 rounded-xl transition"
+                  className="inline-block text-center bg-[var(--primary-red)] hover:bg-[var(--primary-green)] text-black font-bold py-2 px-4 rounded-xl transition"
                 >
                   Buy Now
                 </a>

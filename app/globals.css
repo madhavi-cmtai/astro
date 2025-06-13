@@ -4,9 +4,10 @@
 @custom-variant dark (&:is(.dark *));
 
 :root { /* White background */
-  --primary-red: #e30613;
-  --primary-gold: #C58E03;
-  --primary-green: #28813E;
+  --primary-red: #F26868;
+  --primary-gold: #E8EC83;
+  --primary-green: #C2F4CD;
+  --primary-dark-green:#73CDA7
   --font-main: var(--font-montserrat, 'Montserrat', Arial, Helvetica, sans-serif);
   --radius: 0.625rem;
   --background: oklch(1 0 0);

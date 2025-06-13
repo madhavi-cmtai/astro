@@ -14,7 +14,6 @@ import {
 import { Loader2, Plus, Edit, Trash2, Search } from "lucide-react";
 import { toast } from "sonner";
 import { useSelector, useDispatch } from "react-redux";
-
 import {
   fetchTestimonials,
   selectTestimonials,
@@ -28,11 +27,16 @@ import { AppDispatch } from "@/lib/redux/store";
 
 interface TestimonialItem {
   id: string;
-  title: string;
+  name: string;
+  description?: string;
   media: string;
+  rating: number;
+  spread: string;
+  status: "active" | "inactive";
   createdOn?: string;
   updatedOn?: string;
 }
+
 
 export default function TestimonialPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -44,11 +48,36 @@ export default function TestimonialPage() {
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [editItem, setEditItem] = useState<TestimonialItem | null>(null);
-  const [form, setForm] = useState({ title: "", media: "" });
+
+  const openEditModal = (item: TestimonialItem) => {
+    console.log("Editing testimonial with ID:", item.id);
+    setEditItem(item);
+    setForm({
+      name: item.name,
+      description: item.description || "",
+      media: item.media,
+      spread: item.spread,
+      rating: item.rating,
+      status: item.status,
+    });
+    setMediaPreview(item.media);
+    setModalOpen(true);
+  };
+  
+
   const [deleteItem, setDeleteItem] = useState<TestimonialItem | null>(null);
   const [mediaFile, setMediaFile] = useState<File | null>(null);
   const [mediaPreview, setMediaPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [form, setForm] = useState({
+    name: "",
+    description: "",
+    media: "",
+    spread: "",
+    rating: 0,
+    status: "active",
+  });
+  
 
   useEffect(() => {
     dispatch(fetchTestimonials());
@@ -57,40 +86,35 @@ export default function TestimonialPage() {
   const filteredItems = useMemo(
     () =>
       (Array.isArray(testimonialItems) ? testimonialItems : []).filter((item) =>
-        item.title.toLowerCase().includes(search.toLowerCase())
+        (item.name ?? "").toLowerCase().includes((search ?? "").toLowerCase())
       ),
     [testimonialItems, search]
   );
+  
 
   const openAddModal = () => {
     setEditItem(null);
-    setForm({ title: "", media: "" });
+    setForm({
+      name: "",
+      description: "",
+      media: "",
+      rating: 0,
+      spread: "",
+      status: "active"
+    });
     setMediaFile(null);
     setMediaPreview(null);
     setModalOpen(true);
   };
 
-  const openEditModal = (item: TestimonialItem) => {
-    setEditItem(item);
-    setForm({ title: item.title, media: item.media });
-    setMediaPreview(item.media);
-    setMediaFile(null);
-    setModalOpen(true);
-  };
 
   const handleDelete = async () => {
     if (!deleteItem) return;
     setLoading(true);
 
     try {
-      const res = await fetch(`/api/routes/testimonials?id=${deleteItem.id}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) throw new Error("Delete failed");
-
+      await dispatch(deleteTestimonial(deleteItem.id)).unwrap();
       toast.success("Media deleted!");
-      dispatch(fetchTestimonials());
     } catch (err) {
       console.error(err);
       toast.error("Failed to delete media.");
@@ -99,7 +123,6 @@ export default function TestimonialPage() {
     setLoading(false);
     setDeleteItem(null);
   };
-  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,34 +130,37 @@ export default function TestimonialPage() {
 
     try {
       const formData = new FormData();
-      formData.append("title", form.title);
+      formData.append("name", form.name);
+      formData.append("spread", form.spread);
+      formData.append("rating", String(form.rating));
+      formData.append("status", form.status);
+
+      const isVideo = mediaFile?.type.startsWith("video/");
+      const isImage = mediaFile?.type.startsWith("image/");
+
       if (mediaFile) {
         formData.append("media", mediaFile);
-      }
 
-      let response;
+        // Include description only for image
+        if (isImage) {
+          formData.append("description", form.description);
+        }
+      } else {
+        // In case of edit, keep existing description
+        formData.append("description", form.description);
+      }
 
       if (editItem) {
-        formData.append("id", editItem.id); // for update
-        response = await fetch("/api/routes/testimonials", {
-          method: "PUT",
-          body: formData,
-        });
+        await dispatch(updateTestimonial({ formData, id: editItem.id })).unwrap();
+        toast.success("Media updated!");
       } else {
-        response = await fetch("/api/routes/testimonials", {
-          method: "POST",
-          body: formData,
-        });
+        await dispatch(addTestimonial(formData)).unwrap();
+        toast.success("Media added!");
       }
-
-      if (!response.ok) throw new Error("Failed to save media");
-
-      toast.success(editItem ? "Media updated!" : "Media added!");
 
       setModalOpen(false);
       setMediaFile(null);
       setMediaPreview(null);
-      dispatch(fetchTestimonials()); // refresh list
     } catch (err) {
       console.error(err);
       toast.error("Failed to save media.");
@@ -142,7 +168,7 @@ export default function TestimonialPage() {
       setLoading(false);
     }
   };
-
+  
 
   const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -157,8 +183,7 @@ export default function TestimonialPage() {
     const previewUrl = URL.createObjectURL(file);
     setMediaPreview(previewUrl);
   };
-  
-  
+
   const renderMediaPreview = (url: string | null) => {
     if (!url) return null;
     if (url.match(/\.(jpeg|jpg|png|gif)$/)) {
@@ -186,7 +211,7 @@ export default function TestimonialPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           </div>
           <Button onClick={openAddModal} className="gap-2 w-full sm:w-auto">
-            <Plus className="w-4 h-4" /> Add Media
+            <Plus className="w-4 h-4" /> Add Testimonial
           </Button>
         </div>
       </div>
@@ -202,7 +227,8 @@ export default function TestimonialPage() {
               </div>
               <div className="p-4 flex-1 flex flex-col justify-between">
                 <div>
-                  <div className="text-lg font-bold mb-1">{item.title}</div>
+                  <div className="text-lg font-bold mb-1">{item.name}</div>
+                  {item.description && <div className="text-sm text-gray-600">{item.description}</div>}
                 </div>
                 <div className="flex gap-2 mt-2">
                   <Button size="sm" variant="ghost" onClick={() => openEditModal(item)}>
@@ -232,11 +258,43 @@ export default function TestimonialPage() {
               <DialogTitle>{editItem ? "Edit Media" : "Add Media"}</DialogTitle>
             </DialogHeader>
             <Input
-              placeholder="Title"
-              value={form.title}
-              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+              placeholder="name"
+              value={form.name}
+              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
               required
             />
+            <textarea
+              placeholder="Description"
+              value={form.description}
+              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+              className="w-full p-2 rounded border border-gray-300 resize-none min-h-[100px]"
+            />
+            <Input
+              placeholder="Spread"
+              value={form.spread}
+              onChange={(e) => setForm((f) => ({ ...f, spread: e.target.value }))}
+              required
+            />
+
+            <Input
+              type="number"
+              placeholder="Rating (1-5)"
+              value={form.rating}
+              min={1}
+              max={5}
+              onChange={(e) => setForm((f) => ({ ...f, rating: Number(e.target.value) }))}
+              required
+            />
+
+            <select
+              value={form.status}
+              onChange={(e) => setForm((f) => ({ ...f, status: e.target.value as "active" | "inactive" }))}
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+            >
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+
             <div className="flex flex-col gap-2">
               <label className="block text-sm font-medium">Upload Media (max 50MB)</label>
               {renderMediaPreview(mediaPreview)}
@@ -247,6 +305,11 @@ export default function TestimonialPage() {
                 onChange={handleMediaChange}
                 className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#e63946]/10 file:text-[#e63946]"
               />
+              {mediaFile && (
+                <div className="text-xs text-gray-500">
+                  Media type detected: <strong>{mediaFile.type}</strong>
+                </div>
+              )}
             </div>
             <DialogFooter>
               <Button type="submit" disabled={loading} className="gap-2">
@@ -268,7 +331,7 @@ export default function TestimonialPage() {
           </DialogHeader>
           <div>
             Are you sure you want to delete{" "}
-            <span className="font-semibold text-[#e63946]">{deleteItem?.title}</span>? This action cannot be undone.
+            <span className="font-semibold text-[#e63946]">{deleteItem?.name}</span>? This action cannot be undone.
           </div>
           <DialogFooter>
             <Button variant="destructive" onClick={handleDelete} disabled={loading} className="gap-2">

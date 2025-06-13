@@ -50,7 +50,7 @@ const ContactSection = () => {
     <section className="relative py-10 px-4 sm:px-8 lg:px-20 flex justify-center items-center mt-20">
       <div className="w-full max-w-3xl bg-white shadow-lg rounded-xl p-6 sm:p-8">
 
-        <h2 className="text-3xl font-bold text-center text-[#e63946] mb-2">Contact Us</h2>
+        <h2 className="text-3xl font-bold text-center text-[var(--primary-red)] mb-2">Contact Us</h2>
         <p className="text-center text-gray-600 mb-8">We’d love to hear from you. Send us your questions, feedback, or book a reading session.</p>
 
         {success && (
@@ -63,7 +63,7 @@ const ContactSection = () => {
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex flex-col">
-            <label className="text-sm font-semibold mb-1 text-[var(--primary-green)]">Name</label>
+            <label className="text-sm font-semibold mb-1 text-[#73CDA7]">Name</label>
             <Input
               name="name"
               value={form.name}
@@ -74,7 +74,7 @@ const ContactSection = () => {
           </div>
 
           <div className="flex flex-col">
-            <label className="text-sm font-semibold mb-1 text-[var(--primary-green)]">Phone</label>
+            <label className="text-sm font-semibold mb-1 text-[#73CDA7]">Phone</label>
             <Input
               name="phone"
               value={form.phone}
@@ -85,7 +85,7 @@ const ContactSection = () => {
           </div>
 
           <div className="flex flex-col md:col-span-2">
-            <label className="text-sm font-semibold mb-1 text-[var(--primary-green)]">Email</label>
+            <label className="text-sm font-semibold mb-1 text-[#73CDA7]">Email</label>
             <Input
               name="email"
               value={form.email}
@@ -97,7 +97,7 @@ const ContactSection = () => {
           </div>
 
           <div className="flex flex-col md:col-span-2">
-            <label className="text-sm font-semibold mb-1 text-[var(--primary-green)]">Message</label>
+            <label className="text-sm font-semibold mb-1 text-[#73CDA7]">Message</label>
             <Textarea
               name="message"
               value={form.message}
@@ -111,7 +111,7 @@ const ContactSection = () => {
           <div className="md:col-span-2">
             <Button
               type="submit"
-              className="w-full bg-[#e63946] text-white font-bold py-3 rounded-lg hover:bg-[#d62839] transition"
+              className="w-full bg-[var(--primary-red)] text-white font-bold py-3 rounded-lg hover:bg-[#F21616] transition"
               disabled={loading}
             >
               {loading ? "Sending..." : "Send Message"}

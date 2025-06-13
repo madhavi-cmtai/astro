@@ -10,7 +10,7 @@ import {
 
 const services = [
   {
-    icon: <Moon className="w-9 h-9 text-[var(--primary-green)]" />,
+    icon: <Moon className="w-9 h-9 text-[var(--primary-red)]" />,
     title: "Love & Relationship Reading",
     desc: "Understand your love life, soulmate energy, and relationship patterns with in-depth guidance.",
   },
@@ -25,7 +25,7 @@ const services = [
     desc: "Explore your soul's journey and receive insights to align your life purpose.",
   },
   {
-    icon: <Globe className="w-9 h-9 text-[var(--primary-green)]" />,
+    icon: <Globe className="w-9 h-9 text-[var(--primary-gold)]" />,
     title: "Online Tarot Sessions",
     desc: "Connect with our certified readers via video or chat from anywhere in the world.",
   },

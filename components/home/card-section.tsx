@@ -81,22 +81,22 @@ export default function TarotCardSection() {
     return (
             <div className="min-h-screen  p-8 flex flex-col items-center justify-center overflow-hidden mt-0">
                 {/* Header */}
-            <section className="relative py-12 px-6 text-center bg-gradient-to-br from-[var(--primary-gold)] via-white to-[var(--primary-red)] rounded-xl shadow-md mx-auto w-full max-w-7xl">
+            <section className="relative py-12 px-6 text-center bg-gradient-to-br from-white via-white to-[var(--primary-green)] rounded-xl shadow-md mx-auto w-full max-w-7xl">
                 {/* Optional Glow Orbs for Mystic Effect */}
                 <motion.div
-                    className="absolute w-32 h-32 bg-[var(--primary-red)] rounded-full blur-2xl opacity-20 top-2 left-4 z-0"
+                    className="absolute w-32 h-32 bg-[var(--primary-green)] rounded-full blur-2xl opacity-20 top-2 left-4 z-0"
                     animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }}
                     transition={{ duration: 6, repeat: Infinity }}
                 />
                 <motion.div
-                    className="absolute w-24 h-24 bg-[var(--primary-gold)] rounded-full blur-2xl opacity-20 bottom-4 right-6 z-0"
+                    className="absolute w-24 h-24 bg-[var(--primary-green)] rounded-full blur-2xl opacity-20 bottom-4 right-6 z-0"
                     animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.3, 0.2] }}
                     transition={{ duration: 7, repeat: Infinity }}
                 />
 
                 {/* Main Title */}
                 <motion.h1
-                    className="relative text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-red)] to-[var(--primary-gold)] mb-3 z-10"
+                    className="relative text-3xl md:text-4xl font-extrabold  bg-clip-text bg-gradient-to-r from-white to-[var(--primary-green)] mb-3 z-10 text-[var(--primary-red)]"
                     initial={{ opacity: 0, y: -30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
@@ -136,8 +136,8 @@ export default function TarotCardSection() {
 
 
                             {/* Back Side */}
-                            <div className="absolute w-full h-full bg-gradient-to-br from-[var(--primary-gold)] via-white to-[var(--primary-red)] rounded-xl shadow-lg backface-hidden rotate-y-180 p-4 flex flex-col justify-center items-center border-4 border-[#cc9900]">
-                                <h3 className="text-2xl font-bold mb-2 text-[var(--primary-red)]">{card.title}</h3>
+                            <div className="absolute w-full h-full bg-gradient-to-br from-white via-white to-[var(--primary-green)] rounded-xl shadow-lg backface-hidden rotate-y-180 p-4 flex flex-col justify-center items-center border-4 border-[#cc9900]">
+                                <h3 className="text-2xl font-bold mb-2 text-[#73CDA7]">{card.title}</h3>
                                 <p className="text-l text-center text-gray-800">{card.meaning}</p>
                             </div>
 

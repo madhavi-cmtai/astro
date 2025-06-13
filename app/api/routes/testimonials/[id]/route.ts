@@ -1,65 +1,136 @@
-// app/api/testimonials/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { db, admin } from "@/app/api/config/firebase";
-import { parseFormData } from "@/lib/parseFormData";
-import { replaceMedia, deleteMedia } from "@/app/api/utils/mediaUtils";
+import { IncomingForm } from "formidable";
+import { Readable } from "stream";
+import { replaceMedia, deleteMedia } from "@/app/api/controller/mediaController";
+import TestimonialService from "@/app/api/services/testimonialServices";
 
-type Params = Promise<{ id: string }>;
+// Turn off body parsing
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
 
-// PATCH: Update a testimonial
-export async function PATCH(req: NextRequest, context: { params: Params }) {
-    const { id } = await context.params; // <-- using 'await params' as requested
+// Parse FormData with formidable
+const parseForm = async (req: Request) => {
+    const form = new IncomingForm({ keepExtensions: true });
 
+    const contentType = req.headers.get("content-type") || "";
+    const contentLength = req.headers.get("content-length") || "";
+
+    const bodyBuffer = Buffer.from(await req.arrayBuffer());
+
+    const mockReq = Object.assign(Readable.from(bodyBuffer), {
+        headers: {
+            "content-type": contentType,
+            "content-length": contentLength,
+        },
+        method: "POST",
+        url: "",
+    });
+
+    return new Promise<{ fields: any; files: any }>((resolve, reject) => {
+        form.parse(mockReq as any, (err, fields, files) => {
+            if (err) reject(err);
+            else resolve({ fields, files });
+        });
+    });
+};
+
+// PUT /api/routes/testimonials/[id]
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { fields, file } = await parseFormData(req);
-        const docRef = db.collection("testimonials").doc(id);
-        const snapshot = await docRef.get();
-
-        if (!snapshot.exists) {
-            return NextResponse.json({ error: "Testimonial not found" }, { status: 404 });
+        const { id } = await params;
+        const existing = await TestimonialService.getTestimonialById(id);        if (!existing) {
+            return NextResponse.json({
+                statusCode: 404,
+                message: "Testimonial not found",
+                data: null,
+                errorCode: "NOT_FOUND",
+                errorMessage: "Testimonial not found"
+            }, { status: 404 });
         }
 
-        const prevData = snapshot.data();
-        let newMedia = prevData?.media;
+        const { fields, files } = await parseForm(req);
 
+        const name = fields.name?.[0] || existing.name;
+        const description = fields.description?.[0] || existing.description;
+        const spread = fields.spread?.[0] || existing.spread;
+        const rating = parseInt(fields.rating?.[0] || existing.rating);
+        const status = fields.status?.[0] === "inactive" ? "inactive" : "active";
+        const updatedOn = new Date().toISOString();
+
+        let media = existing.media;
+        let mediaType = existing.mediaType;
+
+        const file = Array.isArray(files.media) ? files.media[0] : files.media;
         if (file) {
-            newMedia = await replaceMedia(file, prevData?.media);
+            const uploaded = await replaceMedia(existing.media, file);
+            media = uploaded.url;
+            mediaType = uploaded.type;
         }
 
         const updated = {
-            title: fields.title || prevData?.title,
-            media: newMedia,
-            updatedOn: admin.firestore.FieldValue.serverTimestamp(),
+            ...existing,
+            name,
+            description,
+            media,
+            mediaType,
+            spread,
+            rating,
+            status,
+            updatedOn,
         };
 
-        await docRef.update(updated);
+        await TestimonialService.updateTestimonial(id, updated);
 
-        return NextResponse.json({ id, ...updated });
-    } catch (err) {
-        console.error(err);
-        return NextResponse.json({ error: "Failed to update testimonial" }, { status: 500 });
+        return NextResponse.json({
+            statusCode: 200,
+            message: "Testimonial updated successfully",
+            data: updated,
+            errorCode: "NO",
+            errorMessage: "",
+        });
+    } catch (err: any) {
+        console.error("PUT error:", err);
+        return NextResponse.json(
+            { error: err.message || "Failed to update testimonial" },
+            { status: 500 }
+        );
     }
 }
 
-// DELETE: Remove a testimonial
-export async function DELETE(_: NextRequest, context: { params: Params }) {
-    const { id } = await context.params; // <-- using 'await params' as requested
 
+// DELETE /api/routes/testimonials/[id]
+export async function DELETE(_: NextRequest, { params }: { params: Promise<{ id: string }>}) {
     try {
-        const docRef = db.collection("testimonials").doc(id);
-        const snapshot = await docRef.get();
+        const { id } = await params;
 
-        if (!snapshot.exists) {
-            return NextResponse.json({ error: "Not found" }, { status: 404 });
+        const testimonial = await TestimonialService.getTestimonialById(id);
+        if (!testimonial) {
+            return NextResponse.json({ error: "Testimonial not found" }, { status: 404 });
         }
 
-        const data = snapshot.data();
-        await deleteMedia(data?.media);
-        await docRef.delete();
+        // If the testimonial has an associated media file, delete it
+        if (testimonial.media) {
+            await deleteMedia(testimonial.media);
+        }
 
-        return NextResponse.json({ success: true });
-    } catch (err) {
-        console.error(err);
-        return NextResponse.json({ error: "Failed to delete testimonial" }, { status: 500 });
+        // Delete the testimonial record from the database
+        await TestimonialService.deleteTestimonial(id);
+
+        return NextResponse.json({
+            data: id,
+            message: "Testimonial deleted successfully",
+            statusCode: 200,
+            errorCode: "NO",
+            errorMessage: "",
+        });
+    } catch (err: any) {
+        console.error("DELETE error:", err);
+        return NextResponse.json(
+            { error: err.message || "Failed to delete testimonial" },
+            { status: 500 }
+        );
     }
 }

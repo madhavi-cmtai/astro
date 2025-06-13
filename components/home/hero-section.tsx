@@ -49,7 +49,7 @@ export default function Home() {
         {/* CTA Button */}
         <a
           href="#"
-          className="inline-block bg-[var(--primary-red)] text-white font-bold px-8 py-3 rounded-full shadow-lg hover:bg-[#e74d3ccd] transition-colors text-lg animate-fade-in-up delay-200"
+          className="inline-block bg-[var(--primary-red)] text-white font-bold px-8 py-3 rounded-full shadow-lg hover:bg-[#F21616]] transition-colors text-lg animate-fade-in-up delay-200"
           style={{ fontFamily: 'var(--font-main)' }}
         >
           Find Clarity
