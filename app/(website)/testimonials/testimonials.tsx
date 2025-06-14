@@ -136,7 +136,7 @@ const Testimonials = () => {
                             {/* Top name and spread */}
                             <div className="flex items-center gap-7 mb-10">
                                 <div>
-                                    <h3 className="font-semibold text-2xl  mt-4 mb-3 text-[var(--primary-green)]">{story.name}</h3>
+                                    <h3 className="font-semibold text-2xl  mt-4 mb-3 text-[#73CDA7]">{story.name}</h3>
                                     <p className="text-xs text-black-500 font-bold">Tarot Spread: {story.spread}</p>
                                     <div className="flex items-center gap-2 mb-2 mt-2">
                                         {renderStars(story.rating)}

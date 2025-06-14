@@ -102,19 +102,19 @@ const ContactPage = () => {
                         )}
                         <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
                             <div className="flex flex-col col-span-1 md:col-span-1">
-                                <label className="block mb-1 font-semibold text-[var(--primary-green)]">Name</label>
+                                    <label className="block mb-1 font-semibold text-[#73CDA7]">Name</label>
                                 <Input name="name" value={form.name} onChange={handleChange} type="text" placeholder="Your Name" required />
                             </div>
                             <div className="flex flex-col col-span-1 md:col-span-1">
-                                <label className="block mb-1 font-semibold text-[var(--primary-green)]">Phone</label>
+                                    <label className="block mb-1 font-semibold text-[#73CDA7]">Phone</label>
                                 <Input name="phone" value={form.phone} onChange={handleChange} type="tel" placeholder="Your Phone Number" />
                             </div>
                             <div className="flex flex-col col-span-1 md:col-span-2">
-                                <label className="block mb-1 font-semibold text-[var(--primary-green)]">Email</label>
+                                    <label className="block mb-1 font-semibold text-[#73CDA7]">Email</label>
                                 <Input name="email" value={form.email} onChange={handleChange} type="email" placeholder="you@email.com" required />
                             </div>
                             <div className="flex flex-col col-span-1 md:col-span-2">
-                                <label className="block mb-1 font-semibold text-[var(--primary-green)]">Message</label>
+                                    <label className="block mb-1 font-semibold text-[#73CDA7]">Message</label>
                                 <Textarea name="message" value={form.message} onChange={handleChange} rows={7} className="min-h-[140px]" placeholder="Type your message..." required />
                             </div>
                             <div className="col-span-1 md:col-span-2">

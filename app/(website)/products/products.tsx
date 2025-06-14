@@ -107,7 +107,7 @@ const ProductsPage = () => {
               <CardHeader className="pt-5">
                 <CardTitle className="text-xl font-bold text-[var(--primary-red)] flex flex-col gap-1">
                   {product.name}
-                  <span className="text-lg font-extrabold text-[var(--primary-green)]">{product.price}</span>
+                  <span className="text-lg font-extrabold text-[#73CDA7]">{product.price}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col justify-between flex-grow">
@@ -118,7 +118,7 @@ const ProductsPage = () => {
                   )}" tarot reading.`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block text-center bg-[var(--primary-red)] hover:bg-[var(--primary-green)] text-black font-bold py-2 px-4 rounded-xl transition"
+                  className="inline-block text-center bg-[var(--primary-red)] hover:bg-[#FE1D37] text-black font-bold py-2 px-4 rounded-xl transition"
                 >
                   Buy Now
                 </a>
@@ -150,7 +150,7 @@ const ProductsPage = () => {
               <CardHeader className="pt-5">
                 <CardTitle className="text-xl font-bold text-[var(--primary-red)] flex flex-col gap-1">
                   {product.name}
-                  <span className="text-lg font-extrabold text-[var(--primary-green)]">
+                  <span className="text-lg font-extrabold text-[#73CDA7]">
                     {product.price}
                   </span>
                 </CardTitle>
@@ -163,7 +163,7 @@ const ProductsPage = () => {
                   )}" tarot reading.`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block text-center bg-[var(--primary-red)] hover:bg-[var(--primary-green)] text-black font-bold py-2 px-4 rounded-xl transition"
+                  className="inline-block text-center bg-[var(--primary-red)] hover:bg-[#FE1D37] text-black font-bold py-2 px-4 rounded-xl transition"
                 >
                   Buy Now
                 </a>

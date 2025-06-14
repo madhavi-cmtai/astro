@@ -124,7 +124,7 @@ const Blogs = () => {
                             <p className="text-sm mt-2 text-gray-600">{blog.description}</p>
                             <Link
                                 href={`/blogs/${blog.slug}`}
-                                className="text-[var(--primary-green)] font-semibold mt-3 inline-block"
+                                className="text-[#73CDA7] font-semibold mt-3 inline-block"
                             >
                                 Read More →
                             </Link>
@@ -155,7 +155,7 @@ const Blogs = () => {
                             <p className="text-sm mt-2 text-gray-600">{post.excerpt}</p>
                             <Link
                                 href={`/blogs/${post.slug}`}
-                                className="text-[var(--primary-green)] font-semibold mt-3 inline-block hover:underline"
+                                className="text-[#73CDA7] font-semibold mt-3 inline-block hover:underline"
                             >
                                 Read More →
                             </Link>

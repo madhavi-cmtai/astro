@@ -40,7 +40,7 @@ class TestimonialService {
         const allTestimonials = await this.getAllTestimonials(forceRefresh);
 
         // Filter testimonials where status is 'active'
-        const activeTestimonials = allTestimonials.filter((testimonial: any) => testimonial.status === "approved");
+        const activeTestimonials = allTestimonials.filter((testimonial: any) => testimonial.status === "active");
 
         consoleManager.log("Returning active testimonials. Count:", activeTestimonials.length);
         return activeTestimonials;
@@ -53,6 +53,7 @@ class TestimonialService {
             const newTestimonialRef = await db.collection("testimonials").add({
                 ...testimonialData,
                 createdOn: timestamp,
+                updatedOn: timestamp,
             });
 
             consoleManager.log("✅ New testimonial added with ID:", newTestimonialRef.id);

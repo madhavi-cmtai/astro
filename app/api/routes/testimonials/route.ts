@@ -4,29 +4,21 @@ import TestimonialService from "@/app/api/services/testimonialServices";
 import { IncomingForm } from "formidable";
 import { Readable } from "stream";
 
-// Turn off body parsing
+// Disable Next.js body parsing
 export const config = {
     api: {
         bodyParser: false,
     },
 };
 
-// Utility to convert Web Request to Node.js Readable stream
-const toNodeReadable = async (req: Request): Promise<Readable> => {
-    const buffer = Buffer.from(await req.arrayBuffer());
-    return Readable.from(buffer);
-};
-
-// Formidable parser
+// Helper: Parse multipart form data using formidable
 const parseForm = async (req: Request) => {
     const form = new IncomingForm({ keepExtensions: true });
 
     const contentType = req.headers.get("content-type") || "";
     const contentLength = req.headers.get("content-length") || "";
-
     const bodyBuffer = Buffer.from(await req.arrayBuffer());
 
-    // Mock a Node.js IncomingMessage
     const mockReq = Object.assign(Readable.from(bodyBuffer), {
         headers: {
             "content-type": contentType,
@@ -43,9 +35,8 @@ const parseForm = async (req: Request) => {
         });
     });
 };
-  
 
-// GET handler
+// ✅ GET handler - fetch all testimonials
 export async function GET() {
     try {
         const data = await TestimonialService.getAllTestimonials();
@@ -69,55 +60,85 @@ export async function GET() {
     }
 }
 
-// POST handler
+// ✅ POST handler - create a new testimonial
 export async function POST(req: Request) {
     try {
         const { fields, files } = await parseForm(req);
 
-        const name = fields.name?.[0] || "";
-        const description = fields.description?.[0] || "";
-        const spread = fields.spread?.[0] || "";
-        const rating = parseInt(fields.rating?.[0] || "0");
-        const status = fields.status?.[0] === "inactive" ? "inactive" : "active";
+        const getField = (f: any) => (Array.isArray(f) ? f[0] : f || "");
+
+        const name = getField(fields.name);
+        const description = getField(fields.description);
+        const spread = getField(fields.spread);
+        const ratingRaw = getField(fields.rating);
+        const status = getField(fields.status) === "inactive" ? "inactive" : "active";
         const createdOn = new Date().toISOString();
         const updatedOn = createdOn;
 
-        const file = Array.isArray(files.media) ? files.media[0] : files.media;
+        const rating = ratingRaw ? parseInt(ratingRaw) : undefined;
 
+        const file = Array.isArray(files.media) ? files.media[0] : files.media;
         let media = "";
         let mediaType: "image" | "video" | null = null;
 
         if (file) {
             const uploaded = await uploadMedia(file);
             media = uploaded.url;
-            mediaType = uploaded.type;
+            mediaType = uploaded.type; // 'image' or 'video'
         }
 
+        // === Conditional Validation ===
         if (!name) {
             return NextResponse.json({ error: "Name is required" }, { status: 400 });
         }
 
-        if (mediaType === "image" && !description) {
-            return NextResponse.json(
-                { error: "Description required for image" },
-                { status: 400 }
-            );
+        if (mediaType === "image") {
+            if (!description || typeof rating !== "number" || isNaN(rating) || !media) {
+                return NextResponse.json(
+                    {
+                        error: "Image testimonials require name, description, rating, and media",
+                    },
+                    { status: 400 }
+                );
+            }
+        }
+
+        if (mediaType === "video") {
+            if (!media) {
+                return NextResponse.json(
+                    { error: "Video testimonials require name and video file" },
+                    { status: 400 }
+                );
+            }
+        }
+
+        if (!mediaType) {
+            if (!description || typeof rating !== "number" || isNaN(rating) || !spread) {
+                return NextResponse.json(
+                    {
+                        error:
+                            "Text-only testimonials require name, description, rating, and spread",
+                    },
+                    { status: 400 }
+                );
+            }
         }
 
         const testimonial = {
-
             name,
-            description,
+            description: description || "",
             media,
-            mediaType,
-            spread,
-            rating,
+            mediaType: mediaType || "no-media",
+            spread: spread || "",
+            rating: rating || 0,
             status,
             createdOn,
             updatedOn,
         };
 
-        await TestimonialService.addTestimonial(testimonial);
+        const newDoc = await TestimonialService.addTestimonial(testimonial);
+        const id = newDoc.id;
+
 
         return NextResponse.json({
             statusCode: 201,

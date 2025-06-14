@@ -20,7 +20,7 @@ const services = [
     desc: "Find direction in your professional path and gain clarity on financial decisions.",
   },
   {
-    icon: <Sun className="w-9 h-9 text-[var(--primary-yellow)]" />,
+    icon: <Sun className="w-9 h-9 text-[#73CDA7]" />,
     title: "Life Purpose & Spiritual Path",
     desc: "Explore your soul's journey and receive insights to align your life purpose.",
   },
@@ -51,7 +51,7 @@ const About = () => {
 
 
       {/* ✨ About Shilpa Sethi with Glow */}
-      <section className="relative py-10 px-6 bg-gradient-to-br from-[var(--primary-gold)] via-white to-[var(--primary-red)] rounded-xl shadow-md mx-auto w-full max-w-7xl overflow-hidden">
+      <section className="relative py-10 px-6 bg-gradient-to-br from-white via-white to-[var(--primary-green)] rounded-xl shadow-md mx-auto w-full max-w-7xl overflow-hidden">
         <motion.div
           className="absolute w-32 h-32 bg-[var(--primary-red)] rounded-full blur-2xl opacity-20 top-2 left-4 z-0"
           animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }}
@@ -75,7 +75,7 @@ const About = () => {
             <Image
               src="/about.jpg"
               alt="About Acharya Shilpa Sethi"
-              className="rounded-3xl shadow-2xl object-cover w-full max-w-lg h-[420px] md:h-[500px] border-4 border-[var(--primary-gold)] bg-white -ml-20"
+              className="rounded-3xl shadow-2xl object-cover w-full max-w-lg h-[420px] md:h-[500px] border-4 border-[var(--primary-green)] bg-white -ml-20"
               width={300}
               height={300}
             />
@@ -91,7 +91,7 @@ const About = () => {
             viewport={{ once: true }}
             className="w-full md:w-1/2 -ml-20 space-y-6"
           >
-            <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-red)] to-[var(--primary-gold)] -mt-2 ">
+            <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-red)] to-[var(--primary-gold)] -mt-9 ">
               Your Journey to Clarity Starts Here
             </h2>
 
@@ -100,7 +100,7 @@ const About = () => {
               Over the years, I’ve had the honor of guiding thousands through life’s transitions.
             </p>
 
-            <div className="border-l-4 border-[var(--primary-gold)] pl-4 italic text-[var(--primary-red)] font-medium bg-[var(--primary-gold)]/10 rounded-md mt-10 leading-relaxed text-xl">
+            <div className="border-l-4 border-[#73CDA7] pl-4 italic text-[var(--primary-red)] font-medium bg-[var(--primary-green)]/10 rounded-md mt-10 leading-relaxed text-xl">
               “Since 2008, I’ve walked the path of spiritual service — blending ancient metaphysical wisdom with divine intuition to help others align with their true essence.”
             </div>
 
@@ -111,7 +111,7 @@ const About = () => {
 
       {/* 🌌 Soulful Journey Section */}
       <section className="w-full max-w-7xl mx-auto my-20 px-6">
-        <div className="bg-gradient-to-r from-[var(--primary-gold)] via-white to-[var(--primary-red)] rounded-3xl shadow-xl p-10 flex flex-col md:flex-row items-center gap-10 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-white via-white to-[var(--primary-green)] rounded-3xl shadow-xl p-10 flex flex-col md:flex-row items-center gap-10 relative overflow-hidden">
 
           {/* Glow Background Effects */}
           <motion.div
@@ -139,7 +139,7 @@ const About = () => {
             <p className="text-lg text-gray-800 leading-relaxed">
               My work is more than just readings — it’s a soulful journey. Together, we’ll release energetic blocks, connect to your higher self, and restore your spiritual balance.
             </p>
-            <p className="border-l-4 border-[var(--primary-gold)] pl-4 italic text-[var(--primary-red)] font-medium bg-[var(--primary-gold)]/10 rounded-md mt-10 leading-relaxed text-xl">
+            <p className="border-l-4 border-[#73CDA7] pl-4 italic text-[var(--primary-red)] font-medium bg-[var(--primary-green)]/10 rounded-md mt-10 leading-relaxed text-xl">
               Over the years, I’ve had the honor of guiding thousands through life’s transitions. Whether you seek clarity, healing, or awakening, my mission is to empower your path with insight, energy, and confidence.
             </p>
           </motion.div>
@@ -172,7 +172,7 @@ const About = () => {
           {services.map((service, idx) => (
             <div key={idx} className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition border-2 border-[var(--primary-gold)]/40">
               <div className="mb-4">{service.icon}</div>
-              <h3 className="text-xl font-bold mb-2 text-[var(--primary-green)]">{service.title}</h3>
+              <h3 className="text-xl font-bold mb-2 text-[#73CDA7]">{service.title}</h3>
               <p className="text-gray-700">{service.desc}</p>
             </div>
           ))}
@@ -183,8 +183,8 @@ const About = () => {
       <section className="w-full max-w-7xl mx-auto my-16 px-4">
         <div className="rounded-2xl flex flex-col md:flex-row overflow-hidden shadow-lg bg-[#fdf3e7]">
           <div className="flex-1 flex flex-col justify-center p-12">
-            <span className="uppercase text-2xl font-bold text-[var(--primary-gold)] mb-2">Book A Reading</span>
-            <h2 className="text-4xl font-extrabold mb-2 text-[var(--primary-green)]">Let the Divine Guide You</h2>
+            <span className="uppercase text-2xl font-bold text-[#73CDA7] mb-2">Book A Reading</span>
+            <h2 className="text-4xl font-extrabold mb-2 text-[#73CDA7]">Let the Divine Guide You</h2>
             <p className="text-lg mb-6 text-[#222]">Connect with Shilpa Sethi for a personalized and healing session today.</p>
           </div>
           <form className="flex-1 flex flex-col justify-center gap-3 p-12">

@@ -39,7 +39,7 @@ const Header = () => {
                   `px-2 py-1 rounded-md transition-colors ` +
                   (isActive
                     ? "font-bold text-[var(--primary-red)]"
-                    : "text-[var(--primary-green)] hover:text-[var(--primary-gold)] hover:bg-[#fff1e6]")
+                    : " hover:text-[var(--primary-green)] hover:bg-[#fff1e6]")
                 }
               >
                 {link.name}
